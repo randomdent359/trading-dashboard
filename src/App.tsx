@@ -4,9 +4,10 @@ import LogViewer from './components/LogViewer'
 import AlertsViewer from './components/AlertsViewer'
 import Status from './components/Status'
 import PlatformSelector from './components/PlatformSelector'
+import StrategyComparison from './components/StrategyComparison'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts'>('status')
+  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies'>('status')
   const [platform, setPlatform] = useState<'polymarket' | 'hyperliquid'>('polymarket')
 
   const platformLabels = {
@@ -33,6 +34,12 @@ function App() {
           Status
         </button>
         <button 
+          className={`nav-btn ${activeTab === 'strategies' ? 'active' : ''}`}
+          onClick={() => setActiveTab('strategies')}
+        >
+          Strategies
+        </button>
+        <button 
           className={`nav-btn ${activeTab === 'logs' ? 'active' : ''}`}
           onClick={() => setActiveTab('logs')}
         >
@@ -48,6 +55,7 @@ function App() {
 
       <main className="main">
         {activeTab === 'status' && <Status platform={platform} />}
+        {activeTab === 'strategies' && <StrategyComparison platform={platform} />}
         {activeTab === 'logs' && <LogViewer platform={platform} />}
         {activeTab === 'alerts' && <AlertsViewer platform={platform} />}
       </main>
