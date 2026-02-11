@@ -1,0 +1,198 @@
+.paper-trading-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.metrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.metrics-header h1 {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: 1.5rem;
+}
+
+.last-update {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.metrics-loading,
+.metrics-error {
+  padding: 2rem;
+  text-align: center;
+  background: #1e293b;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+}
+
+.metrics-error {
+  background: #7f1d1d;
+  border-color: #991b1b;
+  color: #fecaca;
+}
+
+.metrics-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.summary-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 2px solid #475569;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.summary-label {
+  color: #64748b;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.summary-value {
+  color: #f1f5f9;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.summary-value.wins {
+  color: #10b981;
+}
+
+.strategies-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.strategy-metrics-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 2px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.3s;
+}
+
+.strategy-metrics-card:hover {
+  border-color: #475569;
+  background: linear-gradient(135deg, #293548 0%, #1e293b 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.strategy-header {
+  border-bottom: 1px solid #475569;
+  padding-bottom: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.strategy-header h2 {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: 1.1rem;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.metric-box {
+  background: #0f172a;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.metric-label {
+  color: #64748b;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.metric-value {
+  color: #cbd5e1;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.strategy-status {
+  padding-top: 0.75rem;
+  border-top: 1px solid #334155;
+  text-align: center;
+}
+
+.status-waiting {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.status-green {
+  color: #10b981;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.status-red {
+  color: #ef4444;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.metrics-empty {
+  grid-column: 1 / -1;
+  padding: 3rem;
+  text-align: center;
+  background: #1e293b;
+  border-radius: 0.75rem;
+  border: 1px dashed #334155;
+}
+
+.metrics-empty p {
+  margin: 0;
+  color: #94a3b8;
+}
+
+.metrics-footer {
+  padding-top: 1rem;
+  border-top: 1px solid #334155;
+  color: #64748b;
+  font-size: 0.8rem;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.metrics-footer p {
+  margin: 0.25rem 0;
+}
+
+@media (max-width: 768px) {
+  .metrics-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .strategies-metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr;
+  }
+}
