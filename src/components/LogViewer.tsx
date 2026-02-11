@@ -1,19 +1,26 @@
 import { useState, useEffect, useRef } from 'react'
 import './LogViewer.css'
 
-export default function LogViewer() {
+interface LogViewerProps {
+  platform: 'polymarket' | 'hyperliquid'
+}
+
+export default function LogViewer({ platform }: LogViewerProps) {
   const [logs, setLogs] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [autoScroll, setAutoScroll] = useState(true)
   const logsEndRef = useRef<HTMLDivElement>(null)
 
+  const logFile = platform === 'polymarket'
+    ? '/logs/contrarian-monitor.log'
+    : '/logs/funding-monitor.log'
+
   const fetchLogs = async () => {
     try {
-      const response = await fetch('/logs/contrarian-monitor.log')
+      const response = await fetch(logFile)
       if (!response.ok) throw new Error('Failed to fetch logs')
       const text = await response.text()
-      // Split by newlines and filter empty lines
       const lines = text.split('\n').filter(line => line.trim())
       setLogs(lines)
       setError(null)
@@ -26,9 +33,9 @@ export default function LogViewer() {
 
   useEffect(() => {
     fetchLogs()
-    const interval = setInterval(fetchLogs, 2000) // Refresh every 2s
+    const interval = setInterval(fetchLogs, 2000)
     return () => clearInterval(interval)
-  }, [])
+  }, [platform])
 
   useEffect(() => {
     if (autoScroll && logsEndRef.current) {
@@ -44,10 +51,12 @@ export default function LogViewer() {
 
   if (loading) return <div className="logs-loading">Loading logs...</div>
 
+  const platformName = platform === 'polymarket' ? 'Polymarket' : 'Hyperliquid'
+
   return (
     <div className="log-viewer">
       <div className="log-header">
-        <h2>Monitor Logs</h2>
+        <h2>{platformName} Monitor Logs</h2>
         <div className="log-controls">
           <label className="auto-scroll-toggle">
             <input 
@@ -82,7 +91,7 @@ export default function LogViewer() {
 
       <div className="log-stats">
         <span>📋 {logs.length} lines</span>
-        <span>📁 ~/trading/polymarket/logs/contrarian-monitor.log</span>
+        <span>📁 {logFile}</span>
       </div>
     </div>
   )
@@ -90,7 +99,7 @@ export default function LogViewer() {
 
 function getLogLevel(line: string): string {
   if (line.includes('❌') || line.includes('ERROR')) return 'error'
-  if (line.includes('🚨') || line.includes('CONSENSUS')) return 'alert'
+  if (line.includes('🚨') || line.includes('EXTREME')) return 'alert'
   if (line.includes('✅') || line.includes('SUCCESS')) return 'success'
   if (line.includes('⚠️') || line.includes('WARNING')) return 'warning'
   return 'info'

@@ -10,7 +10,11 @@ interface ServiceStatus {
   memory: string
 }
 
-export default function Status() {
+interface StatusProps {
+  platform: 'polymarket' | 'hyperliquid'
+}
+
+export default function Status({ platform }: StatusProps) {
   const [status, setStatus] = useState<ServiceStatus | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -18,16 +22,29 @@ export default function Status() {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
+        // Determine file paths based on platform
+        const logFile = platform === 'polymarket' 
+          ? '/logs/contrarian-monitor.log'
+          : '/logs/funding-monitor.log'
+        
+        const alertFile = platform === 'polymarket'
+          ? '/data/consensus-extremes.jsonl'
+          : '/data/funding-extremes.jsonl'
+        
         // Fetch raw log file
-        const logsRes = await fetch('/logs/contrarian-monitor.log')
+        const logsRes = await fetch(logFile)
         const logsText = logsRes.ok ? await logsRes.text() : ''
         
         // Fetch raw alerts JSONL file
-        const alertsRes = await fetch('/data/consensus-extremes.jsonl')
+        const alertsRes = await fetch(alertFile)
         const alertsText = alertsRes.ok ? await alertsRes.text() : ''
 
         // Parse metrics from logs
-        const pollCount = (logsText.match(/Poll #\d+/g) || []).length
+        const pollPattern = platform === 'polymarket'
+          ? /Poll #(\d+)/g
+          : /Poll #(\d+)/g
+        
+        const pollCount = (logsText.match(pollPattern) || []).length
         const extremeCount = alertsText.split('\n').filter(line => line.trim()).length
         const lastLine = logsText.trim().split('\n').pop() || 'No logs yet'
 
@@ -48,13 +65,32 @@ export default function Status() {
     }
 
     fetchStatus()
-    const interval = setInterval(fetchStatus, 5000) // Refresh every 5s
+    const interval = setInterval(fetchStatus, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [platform])
 
   if (loading) return <div className="status-loading">Loading...</div>
   if (error) return <div className="status-error">Error: {error}</div>
   if (!status) return <div className="status-error">No data available</div>
+
+  const platformConfig = {
+    polymarket: {
+      name: '📊 Polymarket',
+      description: 'Consensus Extremes Monitor',
+      script: '~/trading/polymarket/scripts/contrarian-monitor.py',
+      service: 'contrarian-monitor.service',
+      threshold: '72% consensus'
+    },
+    hyperliquid: {
+      name: '⚡ Hyperliquid',
+      description: 'Funding Rate Arbitrage',
+      script: '~/trading/hyperliquid/scripts/funding-monitor.py',
+      service: 'hyperliquid-funding.service',
+      threshold: '0.12% funding rate'
+    }
+  }
+
+  const config = platformConfig[platform]
 
   return (
     <div className="status">
@@ -93,37 +129,37 @@ export default function Status() {
 
         <div className="status-card">
           <div className="status-icon">🕐</div>
-          <h3>Last Poll</h3>
-          <p className="status-value">{status.lastPoll}</p>
+          <h3>Last Update</h3>
+          <p className="status-value">{status.lastPoll.substring(0, 50)}</p>
         </div>
       </div>
 
       <div className="status-details">
-        <h2>Monitor Details</h2>
+        <h2>{config.name} — {config.description}</h2>
         <div className="details-grid">
           <div className="detail-item">
             <span className="detail-label">Script Location:</span>
-            <code>~/trading/polymarket/scripts/contrarian-monitor.py</code>
+            <code>{config.script}</code>
           </div>
           <div className="detail-item">
             <span className="detail-label">Service:</span>
-            <code>contrarian-monitor.service</code>
+            <code>{config.service}</code>
           </div>
           <div className="detail-item">
             <span className="detail-label">Log File:</span>
-            <code>~/trading/polymarket/logs/contrarian-monitor.log</code>
+            <code>~/trading/{platform}/logs/{platform === 'polymarket' ? 'contrarian' : 'funding'}-monitor.log</code>
           </div>
           <div className="detail-item">
-            <span className="detail-label">Consensus Threshold:</span>
-            <code>72% probability</code>
+            <span className="detail-label">Alert Threshold:</span>
+            <code>{config.threshold}</code>
           </div>
           <div className="detail-item">
             <span className="detail-label">Poll Interval:</span>
-            <code>30 seconds</code>
+            <code>{platform === 'polymarket' ? '30 seconds' : '60 seconds'}</code>
           </div>
           <div className="detail-item">
             <span className="detail-label">Alerts File:</span>
-            <code>~/trading/polymarket/data/consensus-extremes.jsonl</code>
+            <code>~/trading/{platform}/data/{platform === 'polymarket' ? 'consensus-extremes' : 'funding-extremes'}.jsonl</code>
           </div>
         </div>
       </div>
