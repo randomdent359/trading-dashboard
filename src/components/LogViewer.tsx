@@ -10,10 +10,12 @@ export default function LogViewer() {
 
   const fetchLogs = async () => {
     try {
-      const response = await fetch('/api/logs')
+      const response = await fetch('/logs/contrarian-monitor.log')
       if (!response.ok) throw new Error('Failed to fetch logs')
-      const data = await response.json()
-      setLogs(data.lines || [])
+      const text = await response.text()
+      // Split by newlines and filter empty lines
+      const lines = text.split('\n').filter(line => line.trim())
+      setLogs(lines)
       setError(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')

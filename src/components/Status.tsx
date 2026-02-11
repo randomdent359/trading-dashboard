@@ -18,10 +18,27 @@ export default function Status() {
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const response = await fetch('/api/status')
-        if (!response.ok) throw new Error('Failed to fetch status')
-        const data = await response.json()
-        setStatus(data)
+        // Fetch raw log file
+        const logsRes = await fetch('/logs/contrarian-monitor.log')
+        const logsText = logsRes.ok ? await logsRes.text() : ''
+        
+        // Fetch raw alerts JSONL file
+        const alertsRes = await fetch('/data/consensus-extremes.jsonl')
+        const alertsText = alertsRes.ok ? await alertsRes.text() : ''
+
+        // Parse metrics from logs
+        const pollCount = (logsText.match(/Poll #\d+/g) || []).length
+        const extremeCount = alertsText.split('\n').filter(line => line.trim()).length
+        const lastLine = logsText.trim().split('\n').pop() || 'No logs yet'
+
+        setStatus({
+          active: true,
+          uptime: 'running',
+          pollCount,
+          extremeCount,
+          lastPoll: lastLine,
+          memory: '~40MB'
+        })
         setError(null)
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Unknown error')

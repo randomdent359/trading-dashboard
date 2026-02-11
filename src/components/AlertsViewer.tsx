@@ -20,10 +20,30 @@ export default function AlertsViewer() {
 
   const fetchAlerts = async () => {
     try {
-      const response = await fetch('/api/alerts')
-      if (!response.ok) throw new Error('Failed to fetch alerts')
-      const data = await response.json()
-      setAlerts(data.alerts || [])
+      const response = await fetch('/data/consensus-extremes.jsonl')
+      if (!response.ok) {
+        // File doesn't exist yet (no alerts)
+        setAlerts([])
+        setError(null)
+        setLoading(false)
+        return
+      }
+      
+      const text = await response.text()
+      // Parse JSONL (one JSON object per line)
+      const alerts = text
+        .split('\n')
+        .filter(line => line.trim())
+        .map(line => {
+          try {
+            return JSON.parse(line)
+          } catch {
+            return null
+          }
+        })
+        .filter(Boolean) as Alert[]
+      
+      setAlerts(alerts)
       setError(null)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error')
