@@ -64,3 +64,40 @@ export interface EquityCurveResponse {
 export function fetchEquityCurve(): Promise<EquityCurveResponse> {
   return apiFetch<EquityCurveResponse>('/api/equity-curve')
 }
+
+export interface TradeData {
+  id: number
+  asset: string
+  exchange: string
+  direction: string
+  entryPrice: number
+  entryTime: string
+  quantity: number
+  exitPrice: number | null
+  exitTime: string | null
+  exitReason: string | null
+  realisedPnl: number
+  status: string
+  metadata: Record<string, unknown>
+}
+
+export interface TradesResponse {
+  trades: TradeData[]
+  total: number
+  limit: number
+  offset: number
+}
+
+export type TradeWithStrategy = TradeData & { strategy: string }
+
+export async function fetchAllTrades(): Promise<TradeWithStrategy[]> {
+  const { strategies } = await fetchStrategies()
+  const results = await Promise.all(
+    strategies.map(s =>
+      apiFetch<TradesResponse>(`/api/strategies/${s.name}/trades`).then(r =>
+        r.trades.map(t => ({ ...t, strategy: s.name }))
+      )
+    )
+  )
+  return results.flat()
+}

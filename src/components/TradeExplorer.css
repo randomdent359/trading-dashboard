@@ -1,0 +1,263 @@
+.te-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.te-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.te-title {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: 1.5rem;
+}
+
+.te-updated {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+/* Loading / Error */
+.te-loading,
+.te-error {
+  padding: 2rem;
+  text-align: center;
+  background: #1e293b;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  color: #94a3b8;
+}
+
+.te-error {
+  background: #7f1d1d;
+  border-color: #991b1b;
+  color: #fecaca;
+}
+
+/* Filters bar */
+.te-filters {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.te-filter {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  padding: 0.4rem 0.65rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.15s;
+  appearance: auto;
+}
+
+.te-filter:hover {
+  border-color: #475569;
+}
+
+.te-filter:focus {
+  outline: none;
+  border-color: #60a5fa;
+}
+
+input.te-filter {
+  width: 120px;
+  color-scheme: dark;
+}
+
+.te-stats {
+  display: flex;
+  gap: 1.5rem;
+  padding: 0.6rem 1rem;
+  background: #0f172a;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  flex-wrap: wrap;
+}
+
+.te-stat-val {
+  font-weight: 600;
+  color: #cbd5e1;
+  margin-left: 0.25rem;
+}
+
+/* Table */
+.te-table-wrap {
+  overflow-x: auto;
+}
+
+.te-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e293b;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #334155;
+}
+
+.te-table thead {
+  background: #0f172a;
+}
+
+.te-table th {
+  padding: 0.65rem 1rem;
+  text-align: left;
+  color: #cbd5e1;
+  font-weight: 600;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid #334155;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.te-table th:hover {
+  color: #60a5fa;
+}
+
+.te-table th.te-sorted {
+  color: #60a5fa;
+}
+
+.te-sort-ind {
+  margin-left: 0.3rem;
+  font-size: 0.65rem;
+}
+
+.te-table td {
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid #334155;
+  color: #e2e8f0;
+  font-size: 0.85rem;
+}
+
+.te-table .te-num {
+  text-align: right;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.te-table .te-mono {
+  font-family: 'Monaco', 'Menlo', monospace;
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.te-row-win {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.te-row-loss {
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.te-table tbody tr {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.te-table tbody tr:hover {
+  background: #293548;
+}
+
+.te-pnl-pos { color: #10b981; }
+.te-pnl-neg { color: #ef4444; }
+.te-pnl-zero { color: #64748b; }
+
+.te-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.te-badge-win {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10b981;
+}
+
+.te-badge-loss {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.te-badge-open {
+  background: rgba(100, 116, 139, 0.25);
+  color: #94a3b8;
+}
+
+/* Expanded detail row */
+.te-detail-cell {
+  padding: 1rem 1.5rem !important;
+  background: #0f172a;
+}
+
+.te-detail {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.75rem;
+}
+
+.te-detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.te-detail-label {
+  color: #64748b;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.te-detail-value {
+  color: #f1f5f9;
+  font-size: 0.9rem;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+/* Empty state */
+.te-empty {
+  padding: 3rem;
+  text-align: center;
+  color: #64748b;
+  background: #0f172a;
+  border: 1px dashed #334155;
+  border-radius: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  .te-header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .te-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  input.te-filter {
+    width: auto;
+  }
+
+  .te-table {
+    min-width: 650px;
+  }
+}
