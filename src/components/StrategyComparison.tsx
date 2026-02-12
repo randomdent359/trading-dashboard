@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { fetchStrategies, fetchSummary, type StrategyData, type SummaryData } from '../api'
 import './StrategyComparison.css'
 
-type SortKey = 'name' | 'totalTrades' | 'winRate' | 'avgWin' | 'avgLoss' | 'profitFactor' | 'sharpeRatio' | 'totalPnl'
+type SortKey = 'name' | 'totalTrades' | 'winRate' | 'avgWin' | 'avgLoss' | 'profitFactor' | 'sharpeRatio' | 'sortinoRatio' | 'expectancy' | 'totalPnl'
 type SortDir = 'asc' | 'desc'
 
 const COLUMNS: { key: SortKey; label: string; numeric: boolean }[] = [
@@ -13,6 +13,8 @@ const COLUMNS: { key: SortKey; label: string; numeric: boolean }[] = [
   { key: 'avgLoss',      label: 'Avg Loss',     numeric: true },
   { key: 'profitFactor', label: 'Profit Factor', numeric: true },
   { key: 'sharpeRatio',  label: 'Sharpe',       numeric: true },
+  { key: 'sortinoRatio', label: 'Sortino',      numeric: true },
+  { key: 'expectancy',   label: 'Expectancy',   numeric: true },
   { key: 'totalPnl',     label: 'Total P&L',    numeric: true },
 ]
 
@@ -116,8 +118,16 @@ export default function StrategyComparison() {
             <span className="sc-card-value">{fmtNum(summary.sharpeRatio)}</span>
           </div>
           <div className="sc-card">
+            <span className="sc-card-label">Sortino Ratio</span>
+            <span className="sc-card-value">{fmtNum(summary.sortinoRatio)}</span>
+          </div>
+          <div className="sc-card">
             <span className="sc-card-label">Max Drawdown</span>
             <span className={`sc-card-value ${cardColor(summary.maxDrawdown, true)}`}>{fmtPct(summary.maxDrawdown)}</span>
+          </div>
+          <div className="sc-card">
+            <span className="sc-card-label">Expectancy</span>
+            <span className={`sc-card-value ${cardColor(summary.expectancy)}`}>{fmtUsd(summary.expectancy)}</span>
           </div>
           <div className="sc-card">
             <span className="sc-card-label">Open Positions</span>
@@ -159,6 +169,8 @@ export default function StrategyComparison() {
                 <td className="sc-num sc-pnl-neg">{s.avgLoss === 0 ? '$0.00' : fmtUsd(-Math.abs(s.avgLoss))}</td>
                 <td className="sc-num">{fmtNum(s.profitFactor)}</td>
                 <td className="sc-num">{fmtNum(s.sharpeRatio)}</td>
+                <td className="sc-num">{fmtNum(s.sortinoRatio)}</td>
+                <td className="sc-num">{fmtUsd(s.expectancy)}</td>
                 <td className={`sc-num ${pnlClass(s.totalPnl)}`}>{fmtUsd(s.totalPnl)}</td>
               </tr>
             ))}
