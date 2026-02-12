@@ -102,6 +102,38 @@ export async function fetchAllTrades(): Promise<TradeWithStrategy[]> {
   return results.flat()
 }
 
+export interface SignalData {
+  id: number
+  timestamp: string
+  asset: string
+  exchange: string
+  direction: string
+  confidence: number
+  entryPrice: number
+  metadata: Record<string, unknown>
+  actedOn: boolean
+}
+
+export interface SignalsResponse {
+  signals: SignalData[]
+  total: number
+  limit: number
+  offset: number
+}
+
+export interface HealthResponse {
+  status: string
+  timestamp: string
+}
+
+export function fetchHealth(): Promise<HealthResponse> {
+  return apiFetch<HealthResponse>('/api/health')
+}
+
+export async function fetchStrategySignals(name: string): Promise<SignalsResponse> {
+  return apiFetch<SignalsResponse>(`/api/strategies/${name}/signals`)
+}
+
 export async function fetchOpenPositions(): Promise<TradeWithStrategy[]> {
   const { strategies } = await fetchStrategies()
   const results = await Promise.all(

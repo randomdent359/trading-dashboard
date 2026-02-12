@@ -1,0 +1,198 @@
+.sh-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.sh-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.sh-title {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: 1.5rem;
+}
+
+.sh-updated {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.sh-loading,
+.sh-error {
+  padding: 2rem;
+  text-align: center;
+  background: #1e293b;
+  border-radius: 0.5rem;
+  border: 1px solid #334155;
+  color: #94a3b8;
+}
+
+.sh-error {
+  background: #7f1d1d;
+  border-color: #991b1b;
+  color: #fecaca;
+}
+
+/* Service health banner */
+.sh-service {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.6rem 1rem;
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.sh-service-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sh-service-dot.sh-ok { background: #10b981; }
+.sh-service-dot.sh-warn { background: #f59e0b; }
+.sh-service-dot.sh-fail { background: #ef4444; }
+
+.sh-service-label {
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+/* Strategy cards grid */
+.sh-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1rem;
+}
+
+.sh-card {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color 0.2s;
+}
+
+.sh-card:hover {
+  border-color: #475569;
+}
+
+.sh-card.sh-card-alert {
+  border-color: #f59e0b;
+}
+
+.sh-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sh-card-name {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.sh-card-badge {
+  display: inline-block;
+  padding: 0.15rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.sh-badge-enabled {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.sh-badge-disabled {
+  background: rgba(100, 116, 139, 0.2);
+  color: #64748b;
+}
+
+/* Metric rows inside card */
+.sh-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.sh-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.sh-metric-label {
+  color: #64748b;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.sh-metric-value {
+  color: #f1f5f9;
+  font-size: 0.95rem;
+  font-weight: 600;
+  font-family: 'Monaco', 'Menlo', monospace;
+}
+
+.sh-green { color: #10b981; }
+.sh-red   { color: #ef4444; }
+.sh-amber { color: #f59e0b; }
+.sh-blue  { color: #60a5fa; }
+
+/* Alerts strip inside card */
+.sh-alerts {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.sh-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.375rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.sh-alert-warn {
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.sh-alert-crit {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+@media (max-width: 640px) {
+  .sh-header {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .sh-grid {
+    grid-template-columns: 1fr;
+  }
+}

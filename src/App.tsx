@@ -9,9 +9,10 @@ import PaperTradingMetrics from './components/PaperTradingMetrics'
 import EquityCurve from './components/EquityCurve'
 import TradeExplorer from './components/TradeExplorer'
 import LivePositions from './components/LivePositions'
+import StrategyHealth from './components/StrategyHealth'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies' | 'metrics' | 'equity' | 'trades' | 'positions'>('strategies')
+  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies' | 'metrics' | 'equity' | 'trades' | 'positions' | 'health'>('strategies')
   const [platform, setPlatform] = useState<'polymarket' | 'hyperliquid'>('polymarket')
 
   const platformLabels = {
@@ -67,6 +68,12 @@ function App() {
         >
           Positions
         </button>
+        <button
+          className={`nav-btn ${activeTab === 'health' ? 'active' : ''}`}
+          onClick={() => setActiveTab('health')}
+        >
+          Health
+        </button>
         <button 
           className={`nav-btn ${activeTab === 'logs' ? 'active' : ''}`}
           onClick={() => setActiveTab('logs')}
@@ -88,6 +95,7 @@ function App() {
         {activeTab === 'equity' && <EquityCurve />}
         {activeTab === 'trades' && <TradeExplorer />}
         {activeTab === 'positions' && <LivePositions />}
+        {activeTab === 'health' && <StrategyHealth />}
         {activeTab === 'logs' && <LogViewer platform={platform} />}
         {activeTab === 'alerts' && <AlertsViewer platform={platform} />}
       </main>
