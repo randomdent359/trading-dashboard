@@ -101,3 +101,15 @@ export async function fetchAllTrades(): Promise<TradeWithStrategy[]> {
   )
   return results.flat()
 }
+
+export async function fetchOpenPositions(): Promise<TradeWithStrategy[]> {
+  const { strategies } = await fetchStrategies()
+  const results = await Promise.all(
+    strategies.map(s =>
+      apiFetch<TradesResponse>(`/api/strategies/${s.name}/trades?status=OPEN`).then(r =>
+        r.trades.map(t => ({ ...t, strategy: s.name }))
+      )
+    )
+  )
+  return results.flat()
+}
