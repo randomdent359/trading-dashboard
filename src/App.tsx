@@ -8,7 +8,7 @@ import StrategyComparison from './components/StrategyComparison'
 import PaperTradingMetrics from './components/PaperTradingMetrics'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies' | 'metrics'>('metrics')
+  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies' | 'metrics'>('strategies')
   const [platform, setPlatform] = useState<'polymarket' | 'hyperliquid'>('polymarket')
 
   const platformLabels = {
@@ -63,7 +63,7 @@ function App() {
       <main className="main">
         {activeTab === 'metrics' && <PaperTradingMetrics />}
         {activeTab === 'status' && <Status platform={platform} />}
-        {activeTab === 'strategies' && <StrategyComparison platform={platform} />}
+        {activeTab === 'strategies' && <StrategyComparison />}
         {activeTab === 'logs' && <LogViewer platform={platform} />}
         {activeTab === 'alerts' && <AlertsViewer platform={platform} />}
       </main>
