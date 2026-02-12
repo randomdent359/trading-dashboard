@@ -48,3 +48,19 @@ export function fetchStrategies(): Promise<StrategiesResponse> {
 export function fetchSummary(): Promise<SummaryData> {
   return apiFetch<SummaryData>('/api/summary')
 }
+
+export interface EquityCurvePoint {
+  timestamp: string
+  totalEquity: number
+  unrealisedPnl: number
+  realisedPnl: number
+  openPositions: number
+}
+
+export interface EquityCurveResponse {
+  data: EquityCurvePoint[]
+}
+
+export function fetchEquityCurve(): Promise<EquityCurveResponse> {
+  return apiFetch<EquityCurveResponse>('/api/equity-curve')
+}

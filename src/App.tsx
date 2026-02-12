@@ -6,9 +6,10 @@ import Status from './components/Status'
 import PlatformSelector from './components/PlatformSelector'
 import StrategyComparison from './components/StrategyComparison'
 import PaperTradingMetrics from './components/PaperTradingMetrics'
+import EquityCurve from './components/EquityCurve'
 
 function App() {
-  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies' | 'metrics'>('strategies')
+  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies' | 'metrics' | 'equity'>('strategies')
   const [platform, setPlatform] = useState<'polymarket' | 'hyperliquid'>('polymarket')
 
   const platformLabels = {
@@ -40,11 +41,17 @@ function App() {
         >
           Status
         </button>
-        <button 
+        <button
           className={`nav-btn ${activeTab === 'strategies' ? 'active' : ''}`}
           onClick={() => setActiveTab('strategies')}
         >
           Strategies
+        </button>
+        <button
+          className={`nav-btn ${activeTab === 'equity' ? 'active' : ''}`}
+          onClick={() => setActiveTab('equity')}
+        >
+          Equity
         </button>
         <button 
           className={`nav-btn ${activeTab === 'logs' ? 'active' : ''}`}
@@ -64,6 +71,7 @@ function App() {
         {activeTab === 'metrics' && <PaperTradingMetrics />}
         {activeTab === 'status' && <Status platform={platform} />}
         {activeTab === 'strategies' && <StrategyComparison />}
+        {activeTab === 'equity' && <EquityCurve />}
         {activeTab === 'logs' && <LogViewer platform={platform} />}
         {activeTab === 'alerts' && <AlertsViewer platform={platform} />}
       </main>
