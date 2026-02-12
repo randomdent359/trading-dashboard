@@ -145,3 +145,20 @@ export async function fetchOpenPositions(): Promise<TradeWithStrategy[]> {
   )
   return results.flat()
 }
+
+export interface StrategyDocs {
+  name: string
+  description: string
+  docs: {
+    thesis: string
+    data: string
+    risk: string
+  }
+  assets: string[]
+  exchanges: string[]
+  interval: string
+}
+
+export function fetchStrategyDocs(name: string): Promise<StrategyDocs> {
+  return apiFetch<StrategyDocs>(`/api/strategies/${name}/docs`)
+}
