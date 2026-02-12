@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { fetchStrategies, fetchSummary, type StrategyData, type SummaryData } from '../api'
+import { fetchStrategiesByPlatform, fetchSummary, type StrategyData, type SummaryData } from '../api'
+import type { Platform } from './Layout'
 import './StrategyComparison.css'
 
 type SortKey = 'name' | 'totalTrades' | 'winRate' | 'avgWin' | 'avgLoss' | 'profitFactor' | 'sharpeRatio' | 'sortinoRatio' | 'expectancy' | 'totalPnl'
@@ -41,7 +42,7 @@ function cardColor(n: number, invert = false): string {
   return pos ? 'sc-green' : 'sc-red'
 }
 
-export default function StrategyComparison() {
+export default function StrategyComparison({ platform }: { platform: Platform }) {
   const [strategies, setStrategies] = useState<StrategyData[]>([])
   const [summary, setSummary] = useState<SummaryData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -55,7 +56,7 @@ export default function StrategyComparison() {
 
     const load = async () => {
       try {
-        const [stratRes, sumRes] = await Promise.all([fetchStrategies(), fetchSummary()])
+        const [stratRes, sumRes] = await Promise.all([fetchStrategiesByPlatform(platform), fetchSummary()])
         if (!active) return
         setStrategies(stratRes.strategies)
         setSummary(sumRes)
@@ -72,7 +73,7 @@ export default function StrategyComparison() {
     load()
     const interval = setInterval(load, 10_000)
     return () => { active = false; clearInterval(interval) }
-  }, [])
+  }, [platform])
 
   const handleSort = (key: SortKey) => {
     if (sortKey === key) {

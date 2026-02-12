@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react'
-import { fetchStrategies, fetchStrategyDocs, type StrategyDocs as StrategyDocsData } from '../api'
+import { fetchStrategiesByPlatform, fetchStrategyDocs, type StrategyDocs as StrategyDocsData } from '../api'
+import type { Platform } from './Layout'
 import './StrategyDocs.css'
 
-export default function StrategyDocs() {
+export default function StrategyDocs({ platform }: { platform: Platform }) {
   const [docs, setDocs] = useState<StrategyDocsData[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -13,7 +14,7 @@ export default function StrategyDocs() {
     let active = true
     const load = async () => {
       try {
-        const { strategies } = await fetchStrategies()
+        const { strategies } = await fetchStrategiesByPlatform(platform)
         const results = await Promise.all(
           strategies.map(s => fetchStrategyDocs(s.name))
         )
@@ -32,7 +33,7 @@ export default function StrategyDocs() {
     }
     load()
     return () => { active = false }
-  }, [])
+  }, [platform])
 
   const toggle = useCallback((name: string) => {
     setExpanded(prev => {

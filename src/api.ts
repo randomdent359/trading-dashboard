@@ -14,6 +14,7 @@ export interface StrategyData {
   maxDrawdown: number
   expectancy: number
   avgHoldMinutes: number
+  exchanges: string[]
 }
 
 export interface StrategiesResponse {
@@ -161,4 +162,35 @@ export interface StrategyDocs {
 
 export function fetchStrategyDocs(name: string): Promise<StrategyDocs> {
   return apiFetch<StrategyDocs>(`/api/strategies/${name}/docs`)
+}
+
+// ── platform-filtered helpers ───────────────────────────────────────────
+
+export async function fetchStrategiesByPlatform(platform: string): Promise<StrategiesResponse> {
+  const all = await fetchStrategies()
+  return { strategies: all.strategies.filter(s => s.exchanges?.includes(platform)) }
+}
+
+export async function fetchTradesByPlatform(platform: string): Promise<TradeWithStrategy[]> {
+  const { strategies } = await fetchStrategiesByPlatform(platform)
+  const results = await Promise.all(
+    strategies.map(s =>
+      apiFetch<TradesResponse>(`/api/strategies/${s.name}/trades`).then(r =>
+        r.trades.map(t => ({ ...t, strategy: s.name }))
+      )
+    )
+  )
+  return results.flat()
+}
+
+export async function fetchOpenPositionsByPlatform(platform: string): Promise<TradeWithStrategy[]> {
+  const { strategies } = await fetchStrategiesByPlatform(platform)
+  const results = await Promise.all(
+    strategies.map(s =>
+      apiFetch<TradesResponse>(`/api/strategies/${s.name}/trades?status=OPEN`).then(r =>
+        r.trades.map(t => ({ ...t, strategy: s.name }))
+      )
+    )
+  )
+  return results.flat()
 }

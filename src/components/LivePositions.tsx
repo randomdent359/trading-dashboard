@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
-import { fetchOpenPositions, fetchSummary, type TradeWithStrategy, type SummaryData } from '../api'
+import { fetchOpenPositionsByPlatform, fetchSummary, type TradeWithStrategy, type SummaryData } from '../api'
+import type { Platform } from './Layout'
 import './LivePositions.css'
 
 function fmtPrice(p: number): string {
@@ -22,7 +23,7 @@ function fmtHold(entryTime: string): string {
   return m > 0 ? `${h}h ${m}m` : `${h}h`
 }
 
-export default function LivePositions() {
+export default function LivePositions({ platform }: { platform: Platform }) {
   const [positions, setPositions] = useState<TradeWithStrategy[]>([])
   const [summary, setSummary] = useState<SummaryData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -33,7 +34,7 @@ export default function LivePositions() {
     let active = true
     const load = async () => {
       try {
-        const [pos, sum] = await Promise.all([fetchOpenPositions(), fetchSummary()])
+        const [pos, sum] = await Promise.all([fetchOpenPositionsByPlatform(platform), fetchSummary()])
         if (!active) return
         setPositions(pos)
         setSummary(sum)
@@ -49,7 +50,7 @@ export default function LivePositions() {
     load()
     const interval = setInterval(load, 10_000)
     return () => { active = false; clearInterval(interval) }
-  }, [])
+  }, [platform])
 
   // re-render hold times every second
   const [, setTick] = useState(0)

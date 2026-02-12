@@ -1,114 +1,46 @@
-import { useState } from 'react'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import './App.css'
+import Layout, { usePlatform } from './components/Layout'
+import StrategyComparison from './components/StrategyComparison'
+import TradeExplorer from './components/TradeExplorer'
+import LivePositions from './components/LivePositions'
+import PaperTradingMetrics from './components/PaperTradingMetrics'
+import EquityCurve from './components/EquityCurve'
+import StrategyHealth from './components/StrategyHealth'
+import StrategyDocs from './components/StrategyDocs'
 import LogViewer from './components/LogViewer'
 import AlertsViewer from './components/AlertsViewer'
 import Status from './components/Status'
-import PlatformSelector from './components/PlatformSelector'
-import StrategyComparison from './components/StrategyComparison'
-import PaperTradingMetrics from './components/PaperTradingMetrics'
-import EquityCurve from './components/EquityCurve'
-import TradeExplorer from './components/TradeExplorer'
-import LivePositions from './components/LivePositions'
-import StrategyHealth from './components/StrategyHealth'
-import StrategyDocs from './components/StrategyDocs'
 
-function App() {
-  const [activeTab, setActiveTab] = useState<'status' | 'logs' | 'alerts' | 'strategies' | 'metrics' | 'equity' | 'trades' | 'positions' | 'health' | 'docs'>('strategies')
-  const [platform, setPlatform] = useState<'polymarket' | 'hyperliquid'>('polymarket')
+// Thin page wrappers that read platform from route params
+function StrategyComparisonPage() { const p = usePlatform(); return <StrategyComparison platform={p} /> }
+function TradeExplorerPage() { const p = usePlatform(); return <TradeExplorer platform={p} /> }
+function LivePositionsPage() { const p = usePlatform(); return <LivePositions platform={p} /> }
+function PaperTradingMetricsPage() { const p = usePlatform(); return <PaperTradingMetrics platform={p} /> }
+function EquityCurvePage() { const p = usePlatform(); return <EquityCurve platform={p} /> }
+function StrategyHealthPage() { const p = usePlatform(); return <StrategyHealth platform={p} /> }
+function StrategyDocsPage() { const p = usePlatform(); return <StrategyDocs platform={p} /> }
+function LogViewerPage() { const p = usePlatform(); return <LogViewer platform={p} /> }
+function AlertsViewerPage() { const p = usePlatform(); return <AlertsViewer platform={p} /> }
+function StatusPage() { const p = usePlatform(); return <Status platform={p} /> }
 
-  const platformLabels = {
-    polymarket: 'Polymarket Consensus Extremes',
-    hyperliquid: 'Hyperliquid Funding Rates'
-  }
-
+export default function App() {
   return (
-    <div className="app">
-      <header className="header">
-        <h1>🎲 Trading Dashboard</h1>
-        <p>Multi-Strategy Monitoring</p>
-      </header>
-
-      <PlatformSelector currentPlatform={platform} onPlatformChange={setPlatform} />
-      
-      <div className="platform-title">{platformLabels[platform]}</div>
-
-      <nav className="nav">
-        <button 
-          className={`nav-btn ${activeTab === 'metrics' ? 'active' : ''}`}
-          onClick={() => setActiveTab('metrics')}
-        >
-          💰 P&L
-        </button>
-        <button 
-          className={`nav-btn ${activeTab === 'status' ? 'active' : ''}`}
-          onClick={() => setActiveTab('status')}
-        >
-          Status
-        </button>
-        <button
-          className={`nav-btn ${activeTab === 'strategies' ? 'active' : ''}`}
-          onClick={() => setActiveTab('strategies')}
-        >
-          Strategies
-        </button>
-        <button
-          className={`nav-btn ${activeTab === 'equity' ? 'active' : ''}`}
-          onClick={() => setActiveTab('equity')}
-        >
-          Equity
-        </button>
-        <button
-          className={`nav-btn ${activeTab === 'trades' ? 'active' : ''}`}
-          onClick={() => setActiveTab('trades')}
-        >
-          Trades
-        </button>
-        <button
-          className={`nav-btn ${activeTab === 'positions' ? 'active' : ''}`}
-          onClick={() => setActiveTab('positions')}
-        >
-          Positions
-        </button>
-        <button
-          className={`nav-btn ${activeTab === 'health' ? 'active' : ''}`}
-          onClick={() => setActiveTab('health')}
-        >
-          Health
-        </button>
-        <button
-          className={`nav-btn ${activeTab === 'docs' ? 'active' : ''}`}
-          onClick={() => setActiveTab('docs')}
-        >
-          Docs
-        </button>
-        <button 
-          className={`nav-btn ${activeTab === 'logs' ? 'active' : ''}`}
-          onClick={() => setActiveTab('logs')}
-        >
-          Logs
-        </button>
-        <button 
-          className={`nav-btn ${activeTab === 'alerts' ? 'active' : ''}`}
-          onClick={() => setActiveTab('alerts')}
-        >
-          Alerts
-        </button>
-      </nav>
-
-      <main className="main">
-        {activeTab === 'metrics' && <PaperTradingMetrics />}
-        {activeTab === 'status' && <Status platform={platform} />}
-        {activeTab === 'strategies' && <StrategyComparison />}
-        {activeTab === 'equity' && <EquityCurve />}
-        {activeTab === 'trades' && <TradeExplorer />}
-        {activeTab === 'positions' && <LivePositions />}
-        {activeTab === 'health' && <StrategyHealth />}
-        {activeTab === 'docs' && <StrategyDocs />}
-        {activeTab === 'logs' && <LogViewer platform={platform} />}
-        {activeTab === 'alerts' && <AlertsViewer platform={platform} />}
-      </main>
-    </div>
+    <Routes>
+      <Route path="/" element={<Navigate to="/polymarket/strategies" replace />} />
+      <Route path="/:platform" element={<Layout />}>
+        <Route index element={<Navigate to="strategies" replace />} />
+        <Route path="strategies" element={<StrategyComparisonPage />} />
+        <Route path="trades" element={<TradeExplorerPage />} />
+        <Route path="positions" element={<LivePositionsPage />} />
+        <Route path="pnl" element={<PaperTradingMetricsPage />} />
+        <Route path="equity" element={<EquityCurvePage />} />
+        <Route path="health" element={<StrategyHealthPage />} />
+        <Route path="docs" element={<StrategyDocsPage />} />
+        <Route path="logs" element={<LogViewerPage />} />
+        <Route path="alerts" element={<AlertsViewerPage />} />
+        <Route path="status" element={<StatusPage />} />
+      </Route>
+    </Routes>
   )
 }
-
-export default App

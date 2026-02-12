@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import {
-  fetchStrategies, fetchHealth, fetchStrategySignals,
+  fetchStrategiesByPlatform, fetchHealth, fetchStrategySignals,
   type StrategyData, type SignalData, type HealthResponse,
 } from '../api'
+import type { Platform } from './Layout'
 import './StrategyHealth.css'
 
 interface StrategyHealthData {
@@ -69,7 +70,7 @@ function buildAlerts(strategy: StrategyData, signals: SignalData[]): { level: 'w
   return alerts
 }
 
-export default function StrategyHealth() {
+export default function StrategyHealth({ platform }: { platform: Platform }) {
   const [data, setData] = useState<StrategyHealthData[]>([])
   const [health, setHealth] = useState<HealthResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -80,7 +81,7 @@ export default function StrategyHealth() {
     let active = true
     const load = async () => {
       try {
-        const [{ strategies }, healthRes] = await Promise.all([fetchStrategies(), fetchHealth()])
+        const [{ strategies }, healthRes] = await Promise.all([fetchStrategiesByPlatform(platform), fetchHealth()])
         const signalResults = await Promise.all(
           strategies.map(s => fetchStrategySignals(s.name).catch(() => ({ signals: [] as SignalData[], total: 0, limit: 100, offset: 0 })))
         )
@@ -111,7 +112,7 @@ export default function StrategyHealth() {
     load()
     const interval = setInterval(load, 10_000)
     return () => { active = false; clearInterval(interval) }
-  }, [])
+  }, [platform])
 
   // tick for timeAgo updates
   const [, setTick] = useState(0)

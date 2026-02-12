@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import type { Platform } from './Layout'
 import './PaperTradingMetrics.css'
 import TradesLog from './TradesLog'
 
@@ -16,7 +17,7 @@ interface MetricsData {
   [key: string]: StrategyMetrics
 }
 
-export default function PaperTradingMetrics() {
+export default function PaperTradingMetrics({ platform }: { platform: Platform }) {
   const [metrics, setMetrics] = useState<MetricsData>({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -39,8 +40,12 @@ export default function PaperTradingMetrics() {
         return
       }
 
-      const data = await response.json()
-      setMetrics(data)
+      const data: MetricsData = await response.json()
+      const filtered: MetricsData = {}
+      for (const [key, val] of Object.entries(data)) {
+        if (key.startsWith(platform)) filtered[key] = val
+      }
+      setMetrics(filtered)
       setError(null)
       setLastUpdate(new Date().toLocaleTimeString())
     } catch (err) {
@@ -54,7 +59,7 @@ export default function PaperTradingMetrics() {
     fetchMetrics()
     const interval = setInterval(fetchMetrics, 5000)
     return () => clearInterval(interval)
-  }, [])
+  }, [platform])
 
   if (loading) return <div className="metrics-loading">Loading metrics...</div>
 

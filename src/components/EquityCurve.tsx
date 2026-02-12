@@ -4,6 +4,7 @@ import {
   ResponsiveContainer, ReferenceLine,
 } from 'recharts'
 import { fetchEquityCurve, type EquityCurvePoint } from '../api'
+import type { Platform } from './Layout'
 import './EquityCurve.css'
 
 // ── constants ────────────────────────────────────────────────────────────
@@ -88,7 +89,7 @@ function ChartTooltip({ active, payload, label }: TipProps) {
 }
 
 // ── component ────────────────────────────────────────────────────────────
-export default function EquityCurve() {
+export default function EquityCurve(_props: { platform: Platform }) {
   const [raw, setRaw] = useState<EquityCurvePoint[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)

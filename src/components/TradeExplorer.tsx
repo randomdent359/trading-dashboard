@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, Fragment } from 'react'
-import { fetchAllTrades, type TradeWithStrategy } from '../api'
+import { fetchTradesByPlatform, type TradeWithStrategy } from '../api'
+import type { Platform } from './Layout'
 import './TradeExplorer.css'
 
 type SortKey = 'entryTime' | 'strategy' | 'asset' | 'direction' | 'realisedPnl' | 'hold'
@@ -50,7 +51,7 @@ function sortVal(t: TradeWithStrategy, key: SortKey): string | number {
   }
 }
 
-export default function TradeExplorer() {
+export default function TradeExplorer({ platform }: { platform: Platform }) {
   const [trades, setTrades] = useState<TradeWithStrategy[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -74,7 +75,7 @@ export default function TradeExplorer() {
     let active = true
     const load = async () => {
       try {
-        const data = await fetchAllTrades()
+        const data = await fetchTradesByPlatform(platform)
         if (!active) return
         setTrades(data)
         setLastUpdate(new Date().toLocaleTimeString())
@@ -89,7 +90,7 @@ export default function TradeExplorer() {
     load()
     const interval = setInterval(load, 10_000)
     return () => { active = false; clearInterval(interval) }
-  }, [])
+  }, [platform])
 
   const strategyKeys = useMemo(
     () => [...new Set(trades.map(t => t.strategy))].sort(),
